@@ -3,14 +3,17 @@
 #include <string.h>
 #include <inttypes.h>
 
+/**
+ * Ces deux variable globales servirons à repérer la position courante du curseur
+ */
 static int LIGNE=0;
 static int COLONNE=0;
 #define FORMAT 0x0F
 
 
 /**
- * retour un pointeur vers la zone memoire corespondant
- * a la ligne et colonne donné en entrée.
+ * retourne un pointeur vers la zone mémoire correspondant
+ * à la ligne et colonne données en entrée.
  *
  */
 uint16_t *ptr_mem(uint32_t lig, uint32_t col){
@@ -38,8 +41,8 @@ void ecrit_car(uint32_t lig, uint32_t col, char c,uint8_t format){
 }
 
 /**
- * Ecrit la chaine de caractere en haut à droite de l'ecran
- * Peu etre utilisé pour afficher l'heure
+ * Ecrit la chaine de caractère en haut à droite de l'écran
+ * Peu être utilisé pour afficher l'heure par exemple 
  */
 void print_top_right(char *chaine){
     int taille=0;
@@ -52,7 +55,6 @@ void print_top_right(char *chaine){
 
 /**
  * Place le curseur sur la position (ligne,col)
- *
  */
 void place_curseur (uint32_t ligne, uint32_t col){
     uint16_t pos=0;
@@ -70,7 +72,7 @@ void place_curseur (uint32_t ligne, uint32_t col){
 }
 
 /**
- * Va afficher un espace sur fond noir sur toutes les cases de l'ecran
+ * Va afficher un espace sur fond noir sur toutes les cases de l'écran
  */
 void efface_ecran(void){
     
@@ -84,7 +86,7 @@ void efface_ecran(void){
 }
 
 /*
- * Traite les caracteres spéciaux en fonction de leru signification  
+ * Traite les caractères spéciaux en fonction de leurs signification  
  */
 void traite_car(char c){
     int8_t div;

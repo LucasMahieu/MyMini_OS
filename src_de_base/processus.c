@@ -5,24 +5,44 @@
 #include "processus.h"
 #include "gestion_ecran.h"
 
+/**
+ * Cette fonction permet d'initialiser n'importe quel processus dans la table de processus
+ * Elle peut aussi être utilisé pour remplacer un processus dans la table
+ */
 void init_proc(int indice, int16_t ipid, char* inom, Etat ietat,uint32_t sommeil, void* fonction) 
 {
+	//pid 
     table_proc[indice].pid = ipid;
+	//nom
     strcpy(table_proc[indice].nom,inom);        
+	//Etat
     table_proc[indice].etat = ietat;
+	//Heure de reveil
     if(ietat == ENDORMI){
         table_proc[indice].reveil = nb_secondes() + sommeil;
     }
-    table_proc[indice].reveil = 0;
+	else{
+		table_proc[indice].reveil = 0;
+	}
+	// Dans l'avant derniere case de la pile : @ de la fonction à exec
     table_proc[indice].pile[TAILLE_PILE-2] = (uint32_t)fonction;
+	// Dans la derniere case de la pile : @ de la fonction de fin de proc
     table_proc[indice].pile[TAILLE_PILE-1] = (uint32_t)fin_proc;
+	// Dans la 2eme case du contexte 
     table_proc[indice].ctx[1] =(uint32_t) &(table_proc[indice].pile[TAILLE_PILE-2]);
+	// Maj du proc courrant
     if(ietat == ELU){
         current_proc = &table_proc[indice]; 
     }
 }
 
-
+/**
+ * Cette fonction créer une nouveau processus
+ * En fait il permet de remplacer un processus mort UNIQUEMENT 
+ * Si le processus n'a pas pu être créer (pas de proc MORT)
+ * La fonction retourne -1
+ * Sinon, si la création à réussi, il retourne 0
+ */
 int  create_proc(char* nom, void* func){
     uint8_t i=0;
     for(i=0; i<TAILLE_TABLE_PROC; i++){
@@ -36,6 +56,9 @@ int  create_proc(char* nom, void* func){
     return -1;
 }
 
+/**
+ * Scan tous les processus pour savoir si ils doivent être réveillés 
+ */
 void maj_table(void){
     int i=0;
     for(i=0; i<TAILLE_TABLE_PROC; i++){
@@ -45,11 +68,18 @@ void maj_table(void){
     }
 }
 
+/**
+ * Fonction de terminaison de processus 
+ */
 void fin_proc(void) {
     (*current_proc).etat = MORT;
     ordonnance();
 }
 
+
+/**
+ * Ordonnanceur du noyau
+ */
 void ordonnance(void){
     proc* old_proc = current_proc;
     // Pour distingué du proc qui vient de mourir et de celui qui est préempté 
@@ -75,8 +105,11 @@ void ordonnance(void){
 }
 
 
-
-void dors(uint32_t som){
+/**
+ * Fait dormir les processus
+ */
+void dors(uint32_t som)
+{
     (*current_proc).etat = ENDORMI;
     (*current_proc).reveil = nb_secondes() + som;
     ordonnance();
@@ -85,7 +118,8 @@ void dors(uint32_t som){
 /**
  * Cette fonction permet d'afficher l'etat de tous les processus.
  */
-void print_proc_stat(void){
+void print_proc_stat(void)
+{
     uint8_t i=0;
     uint8_t j=0;
     uint16_t taille=20;
@@ -109,7 +143,7 @@ void print_proc_stat(void){
                 break;
         }
         for(j=0; j<taille; j++){
-            // on ecrit sur la ligne i+1 a droite de l'ecran (en 0 il y a l'heure)
+            // on écrit sur la ligne i+1 a droite de l'ecran (en 0 il y a l'heure)
             // 0x14 = rouge sur fond bleu
             if(j>strlen(toPrint)-1){
                 ecrit_car(i+1,80-taille+j,' ',0x00);
@@ -121,6 +155,9 @@ void print_proc_stat(void){
     }
 }
 
+/**
+ * LES 4 PROCESSUS CRéER
+ */
 void idle(void){ 
     for(;;) {
         sti();

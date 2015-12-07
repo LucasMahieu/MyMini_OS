@@ -6,9 +6,6 @@
 #include <processus.h>
 //#include <check.h>
 
-// on peut s'entrainer a utiliser GDB avec ce code de base
-// par exemple afficher les valeurs de x, n et res avec la commande display
-
 // une fonction bien connue
 uint32_t fact(uint32_t n)
 {
@@ -34,7 +31,7 @@ void kernel_start(void)
     init_traitant_IT(32,traitant_IT_32); 
     init_clock_freq();
 
-    ecrit_car(0,0,0x41,0x0F); //lettre A blanche sur fond noir
+    ecrit_car(0,0,0x41,0x0F); //lettre A blanche sur fond noir TEST 
     efface_ecran();
     masque_IRQ(0,0);
 
@@ -47,6 +44,8 @@ void kernel_start(void)
     // Appel de la fonction par default idle
     idle();
 }
+
+
 
 // ***********SEANCE 2 GESTION DU TEMPS = CA MARCHE *******************************
 /*    cli();
@@ -66,7 +65,7 @@ void kernel_start(void)
 */
 
 
-
+//############################ SCEANCE 1 EXEMPLE FACT ################
 
     //uint32_t x = fact(5);
     // quand on saura gerer l'ecran, on pourra afficher x

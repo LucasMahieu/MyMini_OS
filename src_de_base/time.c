@@ -10,7 +10,9 @@
 
 
 /**
- * fonction executé par le traitant à chaque interuption
+ * Fonction executé par le traitant à chaque interuption
+ * Cette fonction va mettre à jour les variables globales
+ * SECONDES, MINUTES, HEURES et les afficher 1fois toutes les 50
  */
 void tic_PIT(void){
     outb(0x20,0x20);
@@ -53,7 +55,7 @@ void init_traitant_IT(int32_t num_IT, void (*traitant)(void)){
     msb_traitant = cpy_traitant & 0xFFFF0000 ;
     mot1 = 0x00100000 | lsb_traitant  ;
     mot2 = 0x00008E00 | msb_traitant;
-    // Calcule de l'adr où l'on va ecrire les 2 mots
+    // Calcul de l'adr où l'on va écrire les 2 mots
     addr=(uint32_t*)(0x1000 + (uint32_t)num_IT*8);
     // cpy du 1er mot 
     *(addr) = mot1;
@@ -72,7 +74,7 @@ void init_clock_freq(void)
     freq_lsb =(uint16_t)((QUARTZ/CLOCK_FREQ)%256) ;
     freq_msb =(uint16_t)((QUARTZ/CLOCK_FREQ)/256) ;
     outb(0x34,0x43); 
-    // Informe que l'on va envoyer le nouvelle valeur de freq d'horloge
+ 	// Informe que l'on va envoyer la nouvelle valeur de freq d'horloge
 
     outb(freq_lsb,0x40); 
     outb(freq_msb,0x40); 
